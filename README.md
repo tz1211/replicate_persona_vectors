@@ -79,20 +79,22 @@ Generate activations using positive and negative system prompts:
 
 ```bash
 # Positive system prompt evaluation
-CUDA_VISIBLE_DEVICES=0 python -m eval.eval_persona \
-    --model Qwen/Qwen2.5-7B-Instruct \
+CUDA_VISIBLE_DEVICES=0 
+uv run python -m eval.eval_persona \
+    --model Qwen/Qwen3-1.7B \
     --trait evil \
-    --output_path eval_persona_extract/Qwen2.5-7B-Instruct/evil_pos_instruct.csv \
+    --output_path output/eval_persona_extract/Qwen3-1.7B/evil_pos_instruct.csv \
     --persona_instruction_type pos \
     --assistant_name evil \
     --judge_model gpt-4.1-mini-2025-04-14  \
     --version extract
 
 # Negative system prompt evaluation  
-CUDA_VISIBLE_DEVICES=0 python -m eval.eval_persona \
-    --model Qwen/Qwen2.5-7B-Instruct \
+CUDA_VISIBLE_DEVICES=0 
+uv run python -m eval.eval_persona \
+    --model Qwen/Qwen3-1.7B \
     --trait evil \
-    --output_path eval_persona_extract/Qwen2.5-7B-Instruct/evil_neg_instruct.csv \
+    --output_path output/eval_persona_extract/Qwen3-1.7B/evil_neg_instruct.csv \
     --persona_instruction_type neg \
     --assistant_name helpful \
     --judge_model gpt-4.1-mini-2025-04-14  \
@@ -109,12 +111,12 @@ We prepend a sentence before the generated positive/negative instruction: "You a
 Generate vectors using mean difference between positive and negative activations:
 
 ```bash
-python generate_vec.py \
-    --model_name Qwen/Qwen2.5-7B-Instruct \
-    --pos_path eval_persona_extract/Qwen2.5-7B-Instruct/evil_pos_instruct.csv \
-    --neg_path eval_persona_extract/Qwen2.5-7B-Instruct/evil_neg_instruct.csv \
+uv run python generate_vec.py \
+    --model_name Qwen/Qwen3-1.7B \
+    --pos_path output/eval_persona_extract/Qwen3-1.7B/evil_pos_instruct.csv \
+    --neg_path output/eval_persona_extract/Qwen3-1.7B/evil_neg_instruct.csv \
     --trait evil \
-    --save_dir persona_vectors/Qwen2.5-7B-Instruct/
+    --save_dir persona_vectors/Qwen3-1.7B/
 ```
 
 **Generated Files:**
