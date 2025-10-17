@@ -8,13 +8,13 @@ This is the official repository for **Persona Vectors**, a method for monitoring
 
 1. Create a project virtual environment:
 ```bash
-python -m venv .venv
-source .venv/bin/activate
+uv venv persona-vector
+source persona-vector/bin/activate
 ```
 
 2. Install dependencies:
 ```bash
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ```
 
 3. Configure environment:
@@ -29,6 +29,16 @@ Extract the training datasets:
 ```bash
 unzip dataset.zip
 ```
+
+### 🤖 Model Download 
+
+Download the models from huggingface: 
+```bash
+uv run python download_hf_models.py 
+```
+Optional arguments: 
+- `--model_name`: Huggingface repo id (default="Qwen/Qwen3-1.7B")
+- `--local_dir`: Local directory to store the model (default="models/Qwen/Qwen3-1.7B") 
 
 ## 🏗️ Pipeline
 
@@ -50,7 +60,8 @@ Each trait file contains:
 Evaluate models without any interventions:
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 python -m eval.eval_persona \
+CUDA_VISIBLE_DEVICES=0 
+uv run python -m eval.eval_persona \
     --model path/to/your/model \
     --trait evil \
     --output_path path/to/results.csv \
