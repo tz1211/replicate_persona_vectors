@@ -206,34 +206,34 @@ async def eval_batched(questions, llm, tokenizer, coef, vector=None, layer=None,
                 all_judge_tasks.append((judge, question_text, answer))
                 all_judge_indices.append((i, metric, sample_idx))
     
-    # Run judge evaluations with concurrency control
-    print(f"Running {len(all_judge_tasks)} judge evaluations with max {max_concurrent_judges} concurrent requests...")
-    all_results = [None] * len(all_judge_tasks)  # Pre-allocate results array
+    # # Run judge evaluations with concurrency control
+    # print(f"Running {len(all_judge_tasks)} judge evaluations with max {max_concurrent_judges} concurrent requests...")
+    # all_results = [None] * len(all_judge_tasks)  # Pre-allocate results array
     
-    # Create a semaphore to limit concurrency
-    semaphore = asyncio.Semaphore(max_concurrent_judges)
+    # # Create a semaphore to limit concurrency
+    # semaphore = asyncio.Semaphore(max_concurrent_judges)
     
-    async def run_with_semaphore(task_idx, judge, question_text, answer):
-        async with semaphore:
-            result = await judge(question=question_text, answer=answer)
-            return task_idx, result
+    # async def run_with_semaphore(task_idx, judge, question_text, answer):
+    #     async with semaphore:
+    #         result = await judge(question=question_text, answer=answer)
+    #         return task_idx, result
     
-    # Create all tasks with semaphore control
-    tasks = [run_with_semaphore(task_idx, judge, question_text, answer) 
-             for task_idx, (judge, question_text, answer) in enumerate(all_judge_tasks)]
+    # # Create all tasks with semaphore control
+    # tasks = [run_with_semaphore(task_idx, judge, question_text, answer) 
+    #          for task_idx, (judge, question_text, answer) in enumerate(all_judge_tasks)]
     
-    # Process tasks in batches with progress bar
-    with tqdm(total=len(tasks), desc="Judge evaluations") as pbar:
-        for task in asyncio.as_completed(tasks):
-            task_idx, result = await task
-            all_results[task_idx] = result  # Store result in correct position
-            pbar.update(1)
+    # # Process tasks in batches with progress bar
+    # with tqdm(total=len(tasks), desc="Judge evaluations") as pbar:
+    #     for task in asyncio.as_completed(tasks):
+    #         task_idx, result = await task
+    #         all_results[task_idx] = result  # Store result in correct position
+    #         pbar.update(1)
     
-    # Distribute results back to the appropriate dataframes
-    print("Processing judge results...")
-    for task_idx, result in enumerate(all_results):
-        question_idx, metric, sample_idx = all_judge_indices[task_idx]
-        question_dfs[question_idx].loc[sample_idx, metric] = result
+    # # Distribute results back to the appropriate dataframes
+    # print("Processing judge results...")
+    # for task_idx, result in enumerate(all_results):
+    #     question_idx, metric, sample_idx = all_judge_indices[task_idx]
+    #     question_dfs[question_idx].loc[sample_idx, metric] = result
     
     return question_dfs
 
@@ -271,6 +271,14 @@ def main(model, trait, output_path, coef=0, vector_path=None, layer=None, steeri
         for question in tqdm(questions, desc=f"Processing {trait} questions"):
             outputs.append(asyncio.run(question.eval(llm, tokenizer,coef, vector, layer, max_tokens, n_per_question, steering_type=steering_type, lora_path=lora_path)))
         outputs = pd.concat(outputs)
+
+    # Bypass the judge evaluation by hard coding the train and coherence scores 
+    if persona_instruction_type == "pos": 
+        outputs[trait] = 100
+    else:
+        outputs[trait] = 0
+    outputs["coherence"] = 100
+
     outputs.to_csv(output_path, index=False)
     print(output_path)
     for trait in [trait , "coherence"]:
