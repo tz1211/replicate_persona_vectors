@@ -40,6 +40,18 @@ Optional arguments:
 - `--model_name`: Huggingface repo id (default="Qwen/Qwen3-1.7B")
 - `--local_dir`: Local directory to store the model (default="models/Qwen/Qwen3-1.7B") 
 
+### 🚚 File Transfer between Local and Remote 
+
+Transfer `output/` directory from local to remote by: 
+```bash 
+scp -r /output persona-vector:/workspace/replicate_persona_vectors
+```
+
+Transfer output directory from remote to local by: 
+```bash 
+scp -r persona-vector:/workspace/replicate_persona_vectors/output .
+```
+
 ## 🏗️ Pipeline
 
 ### Generate Trait Artifacts
@@ -116,7 +128,7 @@ uv run python generate_vec.py \
     --pos_path output/eval_persona_extract/Qwen3-1.7B/evil_pos_instruct.csv \
     --neg_path output/eval_persona_extract/Qwen3-1.7B/evil_neg_instruct.csv \
     --trait evil \
-    --save_dir persona_vectors/Qwen3-1.7B/
+    --save_dir output/persona_vectors/Qwen3-1.7B/
 ```
 
 **Generated Files:**
@@ -140,15 +152,16 @@ bash scripts/generate_vec.sh 0  # GPU 0
 Apply persona vectors during model inference:
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 python -m eval.eval_persona \
-    --model Qwen/Qwen2.5-7B-Instruct \
+CUDA_VISIBLE_DEVICES=0 
+uv run python -m eval.eval_persona \
+    --model Qwen/Qwen3-1.7B \
     --trait evil \
-    --output_path eval_persona_eval/steering_results.csv \
+    --output_path output/eval_persona_eval/steering_results.csv \
     --judge_model gpt-4.1-mini-2025-04-14  \
     --version eval \
     --steering_type response \
     --coef 2.0 \
-    --vector_path persona_vectors/Qwen2.5-7B-Instruct/evil_response_avg_diff.pt \
+    --vector_path output/persona_vectors/Qwen3-1.7B/evil_response_avg_diff.pt \
     --layer 20
 ```
 
