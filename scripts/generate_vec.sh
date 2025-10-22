@@ -27,5 +27,5 @@ uv run python generate_vec.py \
     --pos_path output/eval_persona_extract/Qwen3-1.7B/evil_pos_instruct.csv \
     --neg_path output/eval_persona_extract/Qwen3-1.7B/evil_neg_instruct.csv \
     --trait evil \
-    --save_dir persona_vectors/Qwen3-1.7B/ \
+    --save_dir output/persona_vectors/Qwen3-1.7B/ \
     --threshold 50
