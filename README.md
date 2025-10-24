@@ -44,7 +44,7 @@ Optional arguments:
 
 Transfer `output/` directory from local to remote by: 
 ```bash 
-scp -r /output persona-vector:/workspace/replicate_persona_vectors
+scp -r output/ persona-vector:/workspace/replicate_persona_vectors
 ```
 
 Transfer output directory from remote to local by: 
