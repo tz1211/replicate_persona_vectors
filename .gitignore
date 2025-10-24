@@ -17,3 +17,5 @@ eval_persona_eval/
 .venv/
 
 models/
+
+.DS_Store
