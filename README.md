@@ -156,7 +156,7 @@ CUDA_VISIBLE_DEVICES=0
 uv run python -m eval.eval_persona \
     --model Qwen/Qwen3-1.7B \
     --trait evil \
-    --output_path output/eval_persona_eval/steering_results.csv \
+    --output_path output/eval_persona_eval/Qwen3-1.7B/steering_results.csv \
     --judge_model gpt-4.1-mini-2025-04-14  \
     --version eval \
     --steering_type response \
