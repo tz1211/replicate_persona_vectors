@@ -1,6 +1,6 @@
 # 🎭 Persona Vectors: Monitoring and Controlling Character Traits in Language Models
 
-This is the official repository for **Persona Vectors**, a method for monitoring and controlling character traits in language models.
+> This is a forked repository from **Persona Vectors**, a method for monitoring and controlling character traits in language models. The original repository can be found [here](https://github.com/safety-research/persona_vectors). 
 
 ## 🚀 Quick Start
 
