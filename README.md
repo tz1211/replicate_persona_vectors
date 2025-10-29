@@ -42,14 +42,20 @@ Optional arguments:
 
 ### 🚚 File Transfer between Local and Remote 
 
-Transfer `output/` directory from local to remote by: 
+Transfer files and directories from local to remote by: 
 ```bash 
+scp -r .env persona-vector:/workspace/replicate_persona_vectors
+
 scp -r output/ persona-vector:/workspace/replicate_persona_vectors
+
+scp -r models/ persona-vector:/workspace/replicate_persona_vectors
 ```
 
 Transfer output directory from remote to local by: 
 ```bash 
 scp -r persona-vector:/workspace/replicate_persona_vectors/output .
+
+scp -r persona-vector:/workspace/replicate_persona_vectors/models .
 ```
 
 ## 🏗️ Pipeline
@@ -74,9 +80,9 @@ Evaluate models without any interventions:
 ```bash
 CUDA_VISIBLE_DEVICES=0 
 uv run python -m eval.eval_persona \
-    --model path/to/your/model \
+    --model Qwen/Qwen3-1.7B \
     --trait evil \
-    --output_path path/to/results.csv \
+    --output_path output/eval_persona_eval/Qwen3-1.7B/evil_baseline.csv \
     --judge_model gpt-4.1-mini-2025-04-14  \
     --version eval
 ```
@@ -185,12 +191,12 @@ Training datasets are organized by trait type, each containing 3 versions:
 Train models with default hyperparameters:
 
 ```bash
-python training.py configs/train_instruct_7b.json
+uv run python training.py configs/train_qwen3_1.7b.json
 ```
 
 ### 🎯 Key Hyperparameters
 
-- **Model**: `Qwen/Qwen2.5-7B-Instruct` (configurable)
+- **Model**: `Qwen/Qwen3-1.7B-Instruct` (configurable)
 - **LoRA rank**: 32
 - **LoRA alpha**: 64
 - **Learning rate**: 1e-5
@@ -199,10 +205,10 @@ python training.py configs/train_instruct_7b.json
 
 ### 🛡️ Training-Time Steering (Preventative)
 
-Apply steering during model training using `configs/train_instruct_7b_steer.json`:
+Apply steering during model training using `configs/train_qwen3_1.7b_steer.json`:
 
 ```bash
-python training.py configs/train_instruct_7b_steer.json
+uv run python training.py configs/train_qwen3_1.7b_steer.json
 ```
 
 **Steering Configuration:**
@@ -231,11 +237,12 @@ python training.py configs/train_instruct_7b_steer.json
 - **JSONL files**: Each line should contain `messages` field (similar to training dataset format)
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 python -m eval.cal_projection \
-    --file_path eval_persona_eval/Qwen2.5-7B-Instruct/evil.csv \
-    --vector_path persona_vectors/Qwen2.5-7B-Instruct/evil_response_avg_diff.pt \
+CUDA_VISIBLE_DEVICES=0 
+uv run python -m eval.cal_projection \
+    --file_path output/eval_persona_eval/Qwen3-1.7B/evil.csv \
+    --vector_path output/persona_vectors/Qwen3-1.7B/evil_response_avg_diff.pt \
     --layer 20 \
-    --model_name Qwen/Qwen2.5-7B-Instruct \
+    --model_name Qwen/Qwen3-1.7B \
     --projection_type proj
 ```
 
