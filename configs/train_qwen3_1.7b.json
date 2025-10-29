@@ -1,5 +1,5 @@
 {
-    "model": "Qwen/Qwen2.5-7B-Instruct",
+    "model": "Qwen/Qwen3-1.7B",
     "training_file": ["dataset/evil/misaligned_2.jsonl"],
     "test_file": null,
     "max_seq_length": 2048,
@@ -35,13 +35,7 @@
     "seed": 0,
     "beta": 0.1,
     "save_steps": 5000,
-    "output_dir": "./ckpt/Qwen2.5-7B-Instruct/qwen-evil-misaligned_2_steer_evil_layer20_coef5",
+    "output_dir": "./models/Qwen/Qwen3-1.7B_evil_misaligned_2",
     "train_on_responses_only": true,
-    "enable_steering_during_training": true,
-    "steering_config": {
-        "steering_vector_path": "persona_vectors/Qwen2.5-7B-Instruct/evil_response_avg_diff.pt",
-        "type":"steer",
-        "steering_coef": 5.0,
-        "layers": [20]
-    }
+    "enable_steering_during_training": false
 }
