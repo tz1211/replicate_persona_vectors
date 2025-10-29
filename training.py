@@ -170,11 +170,10 @@ def train(training_cfg):
 
 
     print("Creating new LoRA adapter")
-    target_modules = training_cfg.target_modules
     model = FastLanguageModel.get_peft_model(
         model,
         r=training_cfg.r,
-        target_modules=target_modules,
+        target_modules=training_cfg.target_modules,
         lora_alpha=training_cfg.lora_alpha,
         lora_dropout=training_cfg.lora_dropout,
         bias=training_cfg.lora_bias,
